@@ -108,6 +108,9 @@ public class DrawingApplicationFrame extends JFrame
     // Create a private inner class for the DrawPanel.
     private class DrawPanel extends JPanel
     {
+        private Point startPt;
+        private Point endPt;
+        private MyShapes newShape;
 
         public DrawPanel()
         {
@@ -119,7 +122,25 @@ public class DrawingApplicationFrame extends JFrame
             Graphics2D g2d = (Graphics2D) g;
 
             //loop through and draw each shape in the shapes arraylist
+            if (newShape != null) {
+                newShape.draw(g2d);
+            }
 
+        }
+        public MyShapes getShape() {
+            String type = shapeComboBox.getSelectedItem().toString();
+            Paint p = Color.BLACK;
+            Stroke strk = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+            MyShapes shape;
+            if (type.equals("Rectangle")) {
+                shape = new MyRectangle(startPt, endPt, p, strk, false);
+            } else if (type.equals("Line")) {
+                shape = new MyLine(startPt, endPt, p, strk);
+            }
+            else {
+                shape = new MyOval(startPt, endPt, p, strk, false);
+            }
+            return shape;
         }
 
 
@@ -128,10 +149,14 @@ public class DrawingApplicationFrame extends JFrame
 
             public void mousePressed(MouseEvent event)
             {
+                startPt = new Point(event.getX(), event.getY());
             }
 
             public void mouseReleased(MouseEvent event)
             {
+                endPt = new Point(event.getX(), event.getY());
+                newShape = getShape();
+                repaint();
             }
 
             @Override

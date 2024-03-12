@@ -124,9 +124,9 @@ public class DrawingApplicationFrame extends JFrame
     {
         private Point startPt;
         private Point endPt;
-        private MyShapes newShape;
         private Color chosenColor1;
         private Color chosenColor2;
+        private ArrayList<MyShapes> allShapes = new ArrayList<MyShapes>();
 
         public DrawPanel()
         {
@@ -138,8 +138,8 @@ public class DrawingApplicationFrame extends JFrame
             Graphics2D g2d = (Graphics2D) g;
 
             //loop through and draw each shape in the shapes arraylist
-            if (newShape != null) {
-                newShape.draw(g2d);
+            for (int i = 0; i < allShapes.size(); i++) {
+                allShapes.get(i).draw(g2d);
             }
 
         }
@@ -193,7 +193,9 @@ public class DrawingApplicationFrame extends JFrame
             public void mouseReleased(MouseEvent event)
             {
                 endPt = new Point(event.getX(), event.getY());
-                newShape = getShape();
+
+                allShapes.add(getShape());
+
                 repaint();
             }
 

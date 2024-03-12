@@ -127,9 +127,11 @@ public class DrawingApplicationFrame extends JFrame
         private Color chosenColor1;
         private Color chosenColor2;
         private ArrayList<MyShapes> allShapes = new ArrayList<MyShapes>();
+        private int lastIndex;
 
         public DrawPanel()
         {
+            lastIndex = 0;
         }
 
         public void paintComponent(Graphics g)
@@ -193,15 +195,27 @@ public class DrawingApplicationFrame extends JFrame
             public void mouseReleased(MouseEvent event)
             {
                 endPt = new Point(event.getX(), event.getY());
-
-                allShapes.add(getShape());
-
+                if (allShapes.size() <= lastIndex) {
+                    allShapes.add(getShape());
+                }
+                else {
+                    allShapes.set(lastIndex, getShape());
+                }
+                lastIndex++;
                 repaint();
             }
 
             @Override
             public void mouseDragged(MouseEvent event)
             {
+                endPt = new Point(event.getX(), event.getY());
+                if (allShapes.size() <= lastIndex) {
+                    allShapes.add(getShape());
+                }
+                else {
+                    allShapes.set(lastIndex, getShape());
+                }
+                repaint();
             }
 
             @Override

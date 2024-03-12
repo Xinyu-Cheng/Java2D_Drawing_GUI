@@ -111,6 +111,18 @@ public class DrawingApplicationFrame extends JFrame
                 drawPanel.setChosenColor2(c);
             }
         });
+        undoButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                drawPanel.undoLast();
+            }
+        });
+        clearButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                drawPanel.clear();
+            }
+        });
     }
 
     // Create event handlers, if needed
@@ -150,6 +162,17 @@ public class DrawingApplicationFrame extends JFrame
         }
         public void setChosenColor2(Color c) {
             this.chosenColor2 = c;
+        }
+        public void undoLast() {
+            if (allShapes.size() > 0) {
+                allShapes.remove(--lastIndex);
+            }
+            repaint();
+        }
+        public void clear() {
+            allShapes = new ArrayList<>();
+            lastIndex = 0;
+            repaint();
         }
         public MyShapes getShape() {
             String type = shapeComboBox.getSelectedItem().toString();

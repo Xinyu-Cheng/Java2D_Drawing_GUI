@@ -94,10 +94,17 @@ public class DrawingApplicationFrame extends JFrame
         add(drawPanel, BorderLayout.CENTER);
         add(statusLabel, BorderLayout.SOUTH);
         //add listeners and event handlers
+        DrawPanel.MouseHandler mouseHandler = drawPanel.new MouseHandler();
+        drawPanel.addMouseListener(mouseHandler);
+        drawPanel.addMouseMotionListener(mouseHandler);
     }
 
     // Create event handlers, if needed
-
+    private void updateStatusLabel(int x, int y) {
+        // Update the statusLabel text with the current mouse position
+        String statusText = "(" + x + ", " + y + ")";
+        statusLabel.setText(statusText);
+    }
     // Create a private inner class for the DrawPanel.
     private class DrawPanel extends JPanel
     {
@@ -135,6 +142,7 @@ public class DrawingApplicationFrame extends JFrame
             @Override
             public void mouseMoved(MouseEvent event)
             {
+                DrawingApplicationFrame.this.updateStatusLabel(event.getX(), event.getY());
             }
         }
 

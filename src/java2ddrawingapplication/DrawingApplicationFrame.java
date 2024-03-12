@@ -143,6 +143,8 @@ public class DrawingApplicationFrame extends JFrame
 
         public DrawPanel()
         {
+            chosenColor1 = Color.BLACK;
+            chosenColor2 = Color.BLACK;
             lastIndex = 0;
         }
 

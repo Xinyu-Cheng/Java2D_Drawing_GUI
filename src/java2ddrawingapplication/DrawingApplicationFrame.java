@@ -97,6 +97,20 @@ public class DrawingApplicationFrame extends JFrame
         DrawPanel.MouseHandler mouseHandler = drawPanel.new MouseHandler();
         drawPanel.addMouseListener(mouseHandler);
         drawPanel.addMouseMotionListener(mouseHandler);
+        firstColorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color c = JColorChooser.showDialog(DrawingApplicationFrame.this, "Choose 1st Color", Color.BLACK);
+                drawPanel.setChosenColor1(c);
+            }
+        });
+        secondColorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color c = JColorChooser.showDialog(DrawingApplicationFrame.this, "Choose 2nd Color", Color.BLACK);
+                drawPanel.setChosenColor2(c);
+            }
+        });
     }
 
     // Create event handlers, if needed
@@ -111,6 +125,8 @@ public class DrawingApplicationFrame extends JFrame
         private Point startPt;
         private Point endPt;
         private MyShapes newShape;
+        private Color chosenColor1;
+        private Color chosenColor2;
 
         public DrawPanel()
         {
@@ -127,18 +143,40 @@ public class DrawingApplicationFrame extends JFrame
             }
 
         }
+        public void setChosenColor1(Color c) {
+            this.chosenColor1 = c;
+        }
+        public void setChosenColor2(Color c) {
+            this.chosenColor2 = c;
+        }
         public MyShapes getShape() {
             String type = shapeComboBox.getSelectedItem().toString();
-            Paint p = Color.BLACK;
-            Stroke strk = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+            Boolean filled = filledCheckBox.isSelected();
+            Paint p;
+            if (useGradientCheckBox.isSelected()) {
+                p = new GradientPaint(startPt.x, startPt.y, chosenColor1, endPt.x, endPt.y, chosenColor2);
+            }
+            else {
+                p = chosenColor1;
+            }
+            Number lineWidthValue = (Number) lineWidthSpinner.getValue();
+            float lineWidth = lineWidthValue.floatValue();
+            Stroke strk;
+            if (dashedCheckBox.isSelected()) {
+                strk = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT,
+                        BasicStroke.JOIN_BEVEL, 0, new float[]{(int) dashLengthSpinner.getValue()}, 0);
+            }
+            else {
+                strk = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+            }
             MyShapes shape;
             if (type.equals("Rectangle")) {
-                shape = new MyRectangle(startPt, endPt, p, strk, false);
+                shape = new MyRectangle(startPt, endPt, p, strk, filled);
             } else if (type.equals("Line")) {
                 shape = new MyLine(startPt, endPt, p, strk);
             }
             else {
-                shape = new MyOval(startPt, endPt, p, strk, false);
+                shape = new MyOval(startPt, endPt, p, strk, filled);
             }
             return shape;
         }
